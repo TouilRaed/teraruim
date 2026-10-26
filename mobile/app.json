@@ -50,7 +50,10 @@
       "router": {
         "origin": false
       },
-      "apiBaseUrl": "https://teraruim.vercel.app"
+      "apiBaseUrl": "https://teraruim.vercel.app",
+      "eas": {
+        "projectId": "6c827a1f-99e8-4f0d-a121-b34c48042f61"
+      }
     },
     "owner": "touilraed"
   }

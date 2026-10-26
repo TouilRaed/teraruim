@@ -10,7 +10,7 @@ SQLite (`dev.db`) won't work on Vercel — serverless functions can't share a fi
 
 You need two URLs:
 - `DATABASE_URL` — pooled (used by app at runtime, includes `pgbouncer=true&connection_limit=1`)
-- `DIRECT_URL` — direct (used by Prisma migrations only)
+- `DATABASE_URL_UNPOOLED` — direct (used by Prisma migrations only)
 
 ## 2. Switch Prisma schema to Postgres
 
@@ -88,7 +88,7 @@ npm run dev
 | Var | Required | Local | Prod |
 |---|---|---|---|
 | `DATABASE_URL` | ✅ | `file:./dev.db` | Postgres pooled |
-| `DIRECT_URL` | prod only | — | Postgres direct |
+| `DATABASE_URL_UNPOOLED` | prod only | — | Postgres direct |
 | `AUTH_SECRET` | ✅ | any string | `openssl rand -base64 32` |
 | `AUTH_TRUST_HOST` | ✅ | `true` | `true` |
 | `NEXTAUTH_URL` | ✅ | `http://localhost:3000` | `https://your-domain` |

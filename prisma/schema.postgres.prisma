@@ -7,11 +7,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // Pooled connection (Supabase pgbouncer, port 6543) for queries at runtime.
+  // Pooled Neon connection for queries at runtime.
   url       = env("DATABASE_URL")
-  // Direct connection (port 5432) — pgbouncer can't run the DDL that the
+  // Direct (unpooled) Neon connection — the pooler can't run the DDL that the
   // build-time `prisma db push` issues.
-  directUrl = env("DIRECT_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model Product {
