@@ -1,0 +1,110 @@
+// Production Postgres schema. Used on Vercel builds (see package.json "vercel-build").
+// Local dev keeps prisma/schema.prisma as SQLite.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Pooled connection (Supabase pgbouncer, port 6543) for queries at runtime.
+  url       = env("DATABASE_URL")
+  // Direct connection (port 5432) — pgbouncer can't run the DDL that the
+  // build-time `prisma db push` issues.
+  directUrl = env("DIRECT_URL")
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  title            String
+  description      String
+  price            Float
+  compareAtPrice   Float?
+  hidePrice        Boolean  @default(false)
+  image            String
+  gallery          String?
+  offers           String?
+  singleLabel      String?
+  hideSingle       Boolean  @default(false)
+  shippingFee      Float?
+  addOnLabel       String?
+  addOnPrice       Float?
+  category         String
+  stock            Int      @default(100)
+  weight           Float    @default(0.5)
+  sku              String?  @unique
+  shipperProductId Int?
+  createdAt        DateTime @default(now())
+
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String?
+  guestName       String?
+  guestEmail      String?
+  total           Float
+  status          String   @default("pending")
+  addOnsSummary   String?
+  sessionId       String?
+  shipperOrderId  Int?
+  trackingStatus  String?
+  adexBarcode     String?
+  adexLabelUrl    String?
+  intigoNid       String?
+  shipAddress     String?
+  shipCity        String?
+  shipGovernorate String?
+  shipPhone       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  items     OrderItem[]
+
+  @@index([sessionId])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  qty       Int     @default(1)
+  price     Float
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  author    String
+  rating    Int      @default(5)
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model OrderAudit {
+  id         String   @id @default(cuid())
+  orderId    String
+  fromStatus String?
+  toStatus   String
+  actor      String
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
+}
+
+model AdminDevice {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  platform   String?
+  deviceName String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+}

@@ -1,0 +1,40 @@
+name: Mobile OTA Update
+
+# Manual-only until EAS is configured for Teraruim.
+# To re-enable auto-OTA on push: add an EXPO_TOKEN repo secret, run
+# `eas init` in mobile/ (creates a projectId), create an EAS Update
+# "preview" branch, then restore the `push:` trigger below.
+on:
+  workflow_dispatch:
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - "mobile/**"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Publish OTA update
+        run: eas update --branch preview --message "${{ github.event.head_commit.message }}" --non-interactive

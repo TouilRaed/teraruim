@@ -1,0 +1,67 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# local sqlite database
+prisma/*.db
+prisma/*.db-journal
+
+# claude code local settings
+.claude/settings.local.json
+
+# uploaded media
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# local ad creative exports (downloaded PNGs, not deployed)
+/ads/
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.vercel
+.env*.local
+
+# Meta CAPI access token — secret, never commit
+token.txt
+
+# temp migration artifacts (Neon -> Supabase) — contains customer PII
+.neon-dump/
+.dump-neon.mjs
+.load-supabase.mjs

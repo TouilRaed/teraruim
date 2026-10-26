@@ -1,0 +1,20 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+.env
+.env.local
+expo-env.d.ts
+
+# FCM service-account key (push sending) — NEVER commit
+fcm-key.json
+fcm-service-account.json
+*-service-account*.json
+google-service-account*.json

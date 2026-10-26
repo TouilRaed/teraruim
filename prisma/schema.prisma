@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  password      String
+  image         String?
+  phone         String?
+  address1      String?
+  divisionL1Id  Int?     // governorate id from Shipper
+  divisionL1    String?  // governorate name (cached)
+  divisionL2Id  Int?     // city/delegation id
+  divisionL2    String?  // city name (cached)
+  country       String   @default("TN")
+  role          String   @default("user")  // user | admin
+  createdAt     DateTime @default(now())
+
+  likes         Like[]
+  giftsSent     Gift[]   @relation("GiftFrom")
+  giftsReceived Gift[]   @relation("GiftTo")
+  ordersPlaced  Order[]
+  friendsA      Friendship[] @relation("UserA")
+  friendsB      Friendship[] @relation("UserB")
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  title            String
+  description      String
+  price            Float
+  compareAtPrice   Float?   // original/old price (for sale display)
+  hidePrice        Boolean  @default(false)  // hide price/discount/savings on landing page (still used for COD)
+  image            String
+  gallery          String?  // JSON array of extra image URLs
+  offers           String?  // JSON array of bulk offers: [{qty:2,price:45}]
+  singleLabel      String?  // optional name for the standard single-unit offer
+  hideSingle       Boolean  @default(false)  // offers-only mode: hide the single-unit button, sell bundles only
+  shippingFee      Float?   // per-product delivery fee (null/0 = free)
+  addOnLabel       String?  // optional inline add-on (e.g. album) offered as a checkbox
+  addOnPrice       Float?   // price of the inline add-on
+  category         String
+  stock            Int      @default(100)
+  weight           Float    @default(0.5)   // kg, used by Shipper
+  sku              String?  @unique
+  shipperProductId Int?     // mapped Shipper product UUID/id
+  createdAt        DateTime @default(now())
+
+  likes       Like[]
+  gifts       Gift[]
+  orderItems  OrderItem[]
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model Friendship {
+  id         String   @id @default(cuid())
+  userAId    String
+  userBId    String
+  status     String   @default("pending") // pending | accepted
+  requestedBy String
+  createdAt  DateTime @default(now())
+
+  userA      User     @relation("UserA", fields: [userAId], references: [id], onDelete: Cascade)
+  userB      User     @relation("UserB", fields: [userBId], references: [id], onDelete: Cascade)
+
+  @@unique([userAId, userBId])
+  @@index([userAId])
+  @@index([userBId])
+}
+
+model Gift {
+  id              String   @id @default(cuid())
+  fromUserId      String
+  toUserId        String
+  productId       String
+  message         String?
+  status          String   @default("pending") // pending | paid | shipped | delivered
+  shipperOrderId  Int?
+  trackingStatus  String?
+  createdAt       DateTime @default(now())
+
+  fromUser    User     @relation("GiftFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser      User     @relation("GiftTo",   fields: [toUserId],   references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([fromUserId])
+  @@index([toUserId])
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  userId          String?
+  guestName       String?
+  guestEmail      String?
+  total           Float
+  status          String   @default("paid")
+  addOnsSummary   String?  // inline add-ons (e.g. album) — not OrderItem rows; kept for ADEX content + display
+  sessionId       String?
+  shipperOrderId  Int?
+  trackingStatus  String?
+  adexBarcode     String?
+  adexLabelUrl    String?
+  intigoNid       String?
+  shipAddress     String?
+  shipCity        String?
+  shipGovernorate String?
+  shipPhone       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+
+  @@index([sessionId])
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  qty       Int     @default(1)
+  price     Float
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  author    String
+  rating    Int      @default(5)
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model OrderAudit {
+  id         String   @id @default(cuid())
+  orderId    String
+  fromStatus String?
+  toStatus   String
+  actor      String   // "admin" | "system" | "webhook"
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([orderId])
+  @@index([createdAt])
+}
+
+model AdminDevice {
+  id         String   @id @default(cuid())
+  token      String   @unique // Expo push token
+  platform   String?  // "ios" | "android"
+  deviceName String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+}

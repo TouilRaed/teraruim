@@ -1,0 +1,318 @@
+@import "tailwindcss";
+
+:root {
+  /* Light luxe — white base, gold accents (matches the crest logo) */
+  --paper: #FFFFFF;
+  --paper-deep: #F6F5F1;
+  --paper-sand: #EDEBE4;
+  --ink: #16150F;
+  --ink-soft: #4A473F;
+  --ink-muted: #857F73;
+
+  /* CTA + accent palette — gold primary, bronze secondary */
+  --coral: #C8A04A;
+  --coral-deep: #A87E2E;
+  --coral-soft: #FAF2DD;
+  --mint: #B99A4E;
+  --mint-deep: #A6842F;
+  --mint-soft: #F5EFD9;
+  --gold: #C8A04A;
+  --gold-deep: #A87E2E;
+
+  /* Dark text for use on gold surfaces (buttons/badges) */
+  --on-gold: #14110A;
+
+  /* Legacy var aliases (kept so older usages still resolve) */
+  --clay: var(--coral);
+  --clay-deep: var(--coral-deep);
+  --clay-light: var(--coral);
+  --olive: var(--gold-deep);
+  --line: rgba(200, 160, 74, 0.35);
+  --line-soft: rgba(20, 20, 15, 0.10);
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-paper-sand: var(--paper-sand);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+  --color-coral: var(--coral);
+  --color-coral-deep: var(--coral-deep);
+  --color-coral-soft: var(--coral-soft);
+  --color-mint: var(--mint);
+  --color-mint-deep: var(--mint-deep);
+  --color-mint-soft: var(--mint-soft);
+  --color-clay: var(--coral);
+  --color-clay-deep: var(--coral-deep);
+  --color-gold: var(--gold);
+  --color-line: var(--line);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter-tight);
+  --font-arabic: var(--font-tajawal);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Kill mobile sideways scroll. `clip` (not `hidden`) guards the viewport
+   without creating a scroll container, so the sticky Nav keeps working. */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Landing accent — scoped to landing only.
+   Overriding --coral cascades to --clay, .btn-clay, .btn-primary (all resolve
+   var(--coral) at use-site), so landing buttons/accents get the richer
+   espresso-amber while the rest of the site keeps the base amber. */
+.wc-theme {
+  /* Landing keeps the dark-gold system. */
+  --coral: #D8B863;
+  --coral-deep: #C8A04A;
+  --olive: #C8A04A;
+}
+
+/* Reviews swipe carousel — slim, unobtrusive scrollbar */
+.reviews-track {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.reviews-track::-webkit-scrollbar {
+  height: 6px;
+}
+.reviews-track::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 9999px;
+}
+.reviews-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body {
+  background-color: var(--paper);
+  /* Faint gold pitch-grid dots on the dark field. */
+  background-image: radial-gradient(rgba(200, 160, 74, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-inter-tight), system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.005em;
+}
+
+::selection {
+  background: var(--coral);
+  color: var(--on-gold);
+}
+
+/* Display font — Oswald, bold condensed sporty sans */
+.font-display {
+  font-family: var(--font-fraunces), "Oswald", "Arial Narrow", system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+[lang="ar"], .font-arabic {
+  font-family: var(--font-tajawal), "Cairo", "Noto Naskh Arabic", system-ui, sans-serif;
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-lg border border-[var(--line)] bg-[var(--paper-sand)] px-4 py-2.5 text-sm text-[var(--ink)] outline-none transition
+           focus:border-[var(--coral)] focus:ring-2 focus:ring-[var(--coral)]/25
+           placeholder:text-[var(--ink-muted)];
+  }
+  textarea.input { @apply leading-relaxed; }
+  select.input { @apply pr-8 cursor-pointer; }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--coral)] px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[var(--on-gold)]
+           hover:bg-[var(--coral-deep)] disabled:opacity-50 disabled:cursor-not-allowed transition shadow-sm;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] px-4 py-2 text-sm font-medium text-[var(--ink-soft)]
+           hover:bg-[var(--paper-sand)] hover:border-[var(--coral)] transition;
+  }
+  .btn-clay {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--coral)] px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[var(--on-gold)]
+           hover:bg-[var(--coral-deep)] disabled:opacity-60 transition shadow-sm;
+  }
+  .card {
+    @apply rounded-xl bg-[var(--paper-deep)] border border-[var(--line)] overflow-hidden transition;
+  }
+  .card-elev {
+    @apply rounded-xl bg-[var(--paper-deep)] border border-[var(--line)] shadow-[0_1px_2px_rgba(0,0,0,0.4),0_12px_36px_-14px_rgba(0,0,0,0.7)];
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide
+           bg-[var(--paper-sand)] text-[var(--ink-soft)] border border-[var(--line)];
+  }
+  .badge-clay {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide
+           bg-[var(--coral)] text-[var(--on-gold)];
+  }
+  .chip-mint {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold
+           bg-[var(--mint-soft)] text-[var(--mint-deep)];
+  }
+  .chip-coral {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-semibold
+           bg-[var(--coral-soft)] text-[var(--coral-deep)];
+  }
+
+  .ornament {
+    @apply flex items-center gap-3 my-6 text-[var(--coral)];
+  }
+  .ornament::before, .ornament::after {
+    content: "";
+    @apply flex-1 h-px bg-[var(--line)];
+  }
+
+  .price-display {
+    font-family: var(--font-fraunces), "Oswald", system-ui, sans-serif;
+    font-feature-settings: "tnum", "lnum";
+    letter-spacing: 0;
+  }
+
+  /* ——— Panini album pieces ——— */
+
+  /* Dark card with a gold hairline. */
+  .sticker-card {
+    @apply bg-[var(--paper-deep)] rounded-lg overflow-hidden flex flex-col h-full;
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -16px rgba(0, 0, 0, 0.7);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .sticker-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--coral);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 24px 50px -16px rgba(200, 160, 74, 0.35);
+  }
+
+  /* Collector number tab — top-left of each card. */
+  .sticker-num {
+    @apply absolute top-0 left-0 z-10 text-[10px] font-bold tracking-[0.12em] px-2 py-1 rounded-br-lg;
+    background: var(--gold);
+    color: var(--on-gold);
+    font-feature-settings: "tnum";
+  }
+
+  /* Empty album slot — dashed die line waiting for its sticker. */
+  .album-slot {
+    @apply relative rounded-md flex items-center justify-center;
+    border: 2px dashed rgba(20, 30, 51, 0.25);
+    background: rgba(20, 30, 51, 0.03);
+    aspect-ratio: 3 / 4;
+  }
+  .album-slot > span {
+    @apply text-sm font-bold text-[var(--ink-muted)];
+    font-feature-settings: "tnum";
+  }
+
+  /* Filled slot sticker — small tilted card sitting in the album. */
+  .album-sticker {
+    @apply relative rounded-md flex flex-col items-center justify-center gap-1 bg-white;
+    aspect-ratio: 3 / 4;
+    border: 4px solid #fff;
+    outline: 1px solid var(--line);
+    box-shadow: 0 6px 16px -6px rgba(20, 30, 51, 0.3);
+  }
+
+  /* Gold-foil special — the shiny one everyone hunts for. */
+  .album-sticker.foil {
+    background: linear-gradient(135deg, #e8cf8a 0%, var(--gold) 35%, #f5e6bc 50%, var(--gold) 65%, #b3893a 100%);
+    background-size: 220% 220%;
+  }
+}
+
+/* Foil shimmer sweep — light band crossing the foil sticker. */
+@media (prefers-reduced-motion: no-preference) {
+  .album-sticker.foil {
+    animation: foil-shift 4.5s ease-in-out infinite;
+  }
+  @keyframes foil-shift {
+    0%, 100% { background-position: 0% 0%; }
+    50%      { background-position: 100% 100%; }
+  }
+
+  /* Sticker slap — lands on the page, settles into its tilt. */
+  .slap {
+    animation: slap 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  }
+  @keyframes slap {
+    from { opacity: 0; transform: scale(1.25) rotate(0deg); }
+    to   { opacity: 1; transform: scale(1) rotate(var(--tilt, -2deg)); }
+  }
+  .slap-1 { animation-delay: 0.25s; }
+  .slap-2 { animation-delay: 0.45s; }
+  .slap-3 { animation-delay: 0.65s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slap { transform: rotate(var(--tilt, -2deg)); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise { animation: rise 0.55s ease-out both; }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.12s; }
+.rise-3 { animation-delay: 0.2s; }
+.rise-4 { animation-delay: 0.28s; }
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200, 16, 46, 0.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(200, 16, 46, 0); }
+}
+.pulse-gold { animation: pulse-gold 2.4s ease-out infinite; }
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Free-delivery badge on big packs — gold foil with a light sweep. */
+.free-ship {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e8cf8a 0%, var(--mint) 40%, #f5e6bc 55%, var(--mint-deep) 100%);
+  color: #2a1f05;
+  box-shadow: 0 2px 6px rgba(166, 132, 47, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.free-ship::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
+  transform: translateX(-100%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .free-ship::after { animation: shimmer 2.8s ease-in-out infinite; }
+  .free-ship .truck { display: inline-block; animation: truck-bob 1.4s ease-in-out infinite; }
+  @keyframes truck-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.5px); }
+  }
+}
+
+/* Missing album choice at checkout — warning text blinks twice. */
+@media (prefers-reduced-motion: no-preference) {
+  .flash-red-msg { animation: flash-red-msg 0.5s ease-in-out 2; }
+  @keyframes flash-red-msg {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.2; }
+  }
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-deep); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }

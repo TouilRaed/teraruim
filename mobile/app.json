@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Teraruim Admin",
+    "slug": "teraruim-admin",
+    "scheme": "teraruimadmin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1C130B"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "tn.teraruim.admin"
+    },
+    "android": {
+      "package": "tn.teraruim.admin",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1C130B"
+      },
+      "permissions": [
+        "NOTIFICATIONS"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-updates",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#B45309",
+          "sounds": [
+            "./assets/sounds/order.wav"
+          ]
+        }
+      ],
+      "expo-asset"
+    ],
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "apiBaseUrl": "https://teraruim.vercel.app"
+    },
+    "owner": "touilraed"
+  }
+}
