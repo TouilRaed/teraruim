@@ -65,3 +65,8 @@ token.txt
 .neon-dump/
 .dump-neon.mjs
 .load-supabase.mjs
+
+# agent skills installed by vercel integration
+.agents/
+.claude/skills/
+skills-lock.json
